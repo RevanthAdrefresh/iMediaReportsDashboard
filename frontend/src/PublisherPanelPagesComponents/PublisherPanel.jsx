@@ -1274,6 +1274,265 @@
 // export default PublisherPanel;
 
 
+// import React, { useState } from "react";
+// import {
+//   ResponsiveContainer,
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   Tooltip,
+//   CartesianGrid,
+//   PieChart,
+//   Pie,
+//   Cell,
+//   Legend,
+// } from "recharts";
+
+// const PublisherPanel = () => {
+//   const [activeTab, setActiveTab] = useState("dashboard");
+
+//   const COLORS = ["#00C49F", "#FFBB28", "#0088FE"];
+
+//   const performanceData = [
+//     { name: "Tech Trends", views: 12000, clicks: 320, ctr: 2.6, revenue: 850 },
+//     { name: "FinanceWall", views: 9800, clicks: 210, ctr: 2.1, revenue: 620 },
+//     { name: "Foodies Hub", views: 15000, clicks: 480, ctr: 3.1, revenue: 1020 },
+//   ];
+
+//   const earningsData = [
+//     { date: "Nov 1", platform: "YouTube", revenue: 180 },
+//     { date: "Nov 2", platform: "OTT", revenue: 210 },
+//     { date: "Nov 3", platform: "Website", revenue: 190 },
+//     { date: "Nov 4", platform: "YouTube", revenue: 260 },
+//   ];
+
+//   const renderDashboard = () => (
+//     <div style={styles.dashboardGrid}>
+//       <div style={styles.card}>
+//         <h3>📊 Publisher Performance</h3>
+//         <table style={styles.table}>
+//           <thead>
+//             <tr>
+//               <th>Publisher</th>
+//               <th>Views</th>
+//               <th>Clicks</th>
+//               <th>CTR (%)</th>
+//               <th>Revenue ($)</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {performanceData.map((row, i) => (
+//               <tr key={i}>
+//                 <td>{row.name}</td>
+//                 <td>{row.views.toLocaleString()}</td>
+//                 <td>{row.clicks}</td>
+//                 <td>{row.ctr}</td>
+//                 <td>${row.revenue}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+
+//       <div style={styles.chartRow}>
+//         <div style={{ ...styles.card, flex: 1 }}>
+//           <h3>💰 Revenue Distribution</h3>
+//           <ResponsiveContainer width="100%" height={250}>
+//             <PieChart>
+//               <Pie
+//                 data={performanceData}
+//                 dataKey="revenue"
+//                 nameKey="name"
+//                 cx="50%"
+//                 cy="50%"
+//                 outerRadius={80}
+//                 label
+//               >
+//                 {performanceData.map((entry, index) => (
+//                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+//                 ))}
+//               </Pie>
+//               <Legend />
+//               <Tooltip />
+//             </PieChart>
+//           </ResponsiveContainer>
+//         </div>
+
+//         <div style={{ ...styles.card, flex: 1 }}>
+//           <h3>📈 Views vs Clicks</h3>
+//           <ResponsiveContainer width="100%" height={250}>
+//             <BarChart data={performanceData}>
+//               <CartesianGrid strokeDasharray="3 3" />
+//               <XAxis dataKey="name" />
+//               <YAxis />
+//               <Tooltip />
+//               <Legend />
+//               <Bar dataKey="views" fill="#0088FE" />
+//               <Bar dataKey="clicks" fill="#00C49F" />
+//             </BarChart>
+//           </ResponsiveContainer>
+//         </div>
+//       </div>
+//     </div>
+//   );
+
+//   const renderUploads = () => (
+//     <div style={styles.card}>
+//       <h3>📁 Uploaded Campaigns</h3>
+//       {renderTable(performanceData, ["Campaign", "Views", "Clicks", "CTR (%)", "Revenue ($)"])}
+//     </div>
+//   );
+
+//   const renderEarnings = () => (
+//     <div style={styles.card}>
+//       <h3>💰 Earnings Summary</h3>
+//       {renderTable(earningsData, ["Date", "Platform", "Revenue ($)"])}
+//     </div>
+//   );
+
+//   const renderSettings = () => (
+//     <div style={styles.card}>
+//       <h3>⚙️ Settings</h3>
+//       <p>Manage preferences, notifications, and payout methods here.</p>
+//     </div>
+//   );
+
+//   const renderTable = (data, columns) => (
+//     <div style={styles.tableWrapper}>
+//       <table style={styles.table}>
+//         <thead>
+//           <tr>
+//             {columns.map((col) => (
+//               <th key={col}>{col}</th>
+//             ))}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {data.map((row, i) => (
+//             <tr key={i}>
+//               {Object.values(row).map((cell, j) => (
+//                 <td key={j}>{cell}</td>
+//               ))}
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+
+//   return (
+//     <div style={styles.wrapper}>
+//       <aside style={styles.sidebar}>
+//         <h2 style={styles.logo}>Publisher Panel</h2>
+//         {["dashboard", "uploads", "earnings", "settings"].map((tab) => (
+//           <button
+//             key={tab}
+//             style={{
+//               ...styles.navBtn,
+//               background: activeTab === tab ? "#00C49F" : "transparent",
+//             }}
+//             onClick={() => setActiveTab(tab)}
+//           >
+//             {tab.charAt(0).toUpperCase() + tab.slice(1)}
+//           </button>
+//         ))}
+//       </aside>
+
+//       <main style={styles.main}>
+//         {activeTab === "dashboard" && renderDashboard()}
+//         {activeTab === "uploads" && renderUploads()}
+//         {activeTab === "earnings" && renderEarnings()}
+//         {activeTab === "settings" && renderSettings()}
+//       </main>
+//     </div>
+//   );
+// };
+
+// const styles = {
+//   wrapper: {
+//     display: "flex",
+//     height: "100vh",
+//     background: "#f4f6f8",
+//     margin: 0,
+//     fontFamily: "Inter, sans-serif",
+//   },
+//   sidebar: {
+//     width: "240px",
+//     background: "#002b36",
+//     color: "#fff",
+//     display: "flex",
+//     flexDirection: "column",
+//     alignItems: "flex-start",
+//     padding: "20px",
+//     position: "fixed",
+//     top: 0,
+//     bottom: 0,
+//     marginLeft:"-18%"
+//   },
+//   logo: {
+//     fontSize: "20px",
+//     marginBottom: "25px",
+//   },
+//   navBtn: {
+//     color: "#fff",
+//     border: "none",
+//     background: "transparent",
+//     padding: "10px 15px",
+//     borderRadius: "6px",
+//     textAlign: "left",
+//     width: "100%",
+//     fontSize: "15px",
+//     cursor: "pointer",
+//     marginBottom: "8px",
+//     transition: "0.3s",
+//   },
+//   main: {
+//     marginLeft: "240px",
+//     flex: 1,
+//     padding: "30px",
+//     // overflowY: "auto",
+//   },
+//   dashboardGrid: {
+//     display: "flex",
+//     flexDirection: "column",
+//     gap: "20px",
+//   },
+//   chartRow: {
+//     display: "flex",
+//     gap: "20px",
+//     flexWrap: "wrap",
+//   },
+//   card: {
+//     background: "#fff",
+//     padding: "20px",
+//     borderRadius: "12px",
+//     boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+//     flex: 1,
+//   },
+//   tableWrapper: {
+//     // overflowX: "auto",
+//   },
+//   table: {
+//     width: "100%",
+//     borderCollapse: "collapse",
+//     marginTop: "15px",
+//   },
+//   th: {
+//     border: "1px solid #ddd",
+//     background: "#f8f8f8",
+//     padding: "10px",
+//     textAlign: "left",
+//   },
+//   td: {
+//     border: "1px solid #ddd",
+//     padding: "10px",
+//     textAlign: "left",
+//   },
+// };
+
+// export default PublisherPanel;
+
 import React, { useState } from "react";
 import {
   ResponsiveContainer,
@@ -1288,6 +1547,10 @@ import {
   Cell,
   Legend,
 } from "recharts";
+import Dashboard from "./PublisherDashboard";
+import Uploads from "./PublisherUploads";
+import Earnings from "./Earnings";
+import Settings from "./PublisherSettings";
 
 const PublisherPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -1307,104 +1570,15 @@ const PublisherPanel = () => {
     { date: "Nov 4", platform: "YouTube", revenue: 260 },
   ];
 
-  const renderDashboard = () => (
-    <div style={styles.dashboardGrid}>
-      <div style={styles.card}>
-        <h3>📊 Publisher Performance</h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>Publisher</th>
-              <th>Views</th>
-              <th>Clicks</th>
-              <th>CTR (%)</th>
-              <th>Revenue ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {performanceData.map((row, i) => (
-              <tr key={i}>
-                <td>{row.name}</td>
-                <td>{row.views.toLocaleString()}</td>
-                <td>{row.clicks}</td>
-                <td>{row.ctr}</td>
-                <td>${row.revenue}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div style={styles.chartRow}>
-        <div style={{ ...styles.card, flex: 1 }}>
-          <h3>💰 Revenue Distribution</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={performanceData}
-                dataKey="revenue"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label
-              >
-                {performanceData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Legend />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div style={{ ...styles.card, flex: 1 }}>
-          <h3>📈 Views vs Clicks</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="views" fill="#0088FE" />
-              <Bar dataKey="clicks" fill="#00C49F" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderUploads = () => (
-    <div style={styles.card}>
-      <h3>📁 Uploaded Campaigns</h3>
-      {renderTable(performanceData, ["Campaign", "Views", "Clicks", "CTR (%)", "Revenue ($)"])}
-    </div>
-  );
-
-  const renderEarnings = () => (
-    <div style={styles.card}>
-      <h3>💰 Earnings Summary</h3>
-      {renderTable(earningsData, ["Date", "Platform", "Revenue ($)"])}
-    </div>
-  );
-
-  const renderSettings = () => (
-    <div style={styles.card}>
-      <h3>⚙️ Settings</h3>
-      <p>Manage preferences, notifications, and payout methods here.</p>
-    </div>
-  );
-
   const renderTable = (data, columns) => (
     <div style={styles.tableWrapper}>
       <table style={styles.table}>
         <thead>
           <tr>
             {columns.map((col) => (
-              <th key={col}>{col}</th>
+              <th key={col} style={styles.th}>
+                {col}
+              </th>
             ))}
           </tr>
         </thead>
@@ -1412,7 +1586,9 @@ const PublisherPanel = () => {
           {data.map((row, i) => (
             <tr key={i}>
               {Object.values(row).map((cell, j) => (
-                <td key={j}>{cell}</td>
+                <td key={j} style={styles.td}>
+                  {typeof cell === "number" ? cell.toLocaleString() : cell}
+                </td>
               ))}
             </tr>
           ))}
@@ -1440,10 +1616,10 @@ const PublisherPanel = () => {
       </aside>
 
       <main style={styles.main}>
-        {activeTab === "dashboard" && renderDashboard()}
-        {activeTab === "uploads" && renderUploads()}
-        {activeTab === "earnings" && renderEarnings()}
-        {activeTab === "settings" && renderSettings()}
+        {activeTab === "dashboard" && <Dashboard/>}
+        {activeTab === "uploads" && <Uploads/>}
+        {activeTab === "earnings" && <Earnings/>}
+        {activeTab === "settings" && <Settings/>}
       </main>
     </div>
   );
@@ -1459,7 +1635,7 @@ const styles = {
   },
   sidebar: {
     width: "240px",
-    background: "#002b36",
+    background: "#01303f",
     color: "#fff",
     display: "flex",
     flexDirection: "column",
@@ -1467,8 +1643,19 @@ const styles = {
     padding: "20px",
     position: "fixed",
     top: 0,
+    left: 0,
     bottom: 0,
+    height: "100vh",
+    boxShadow: "2px 0 8px rgba(0,0,0,0.2)",
   },
+  main: {
+    marginLeft: "50px",
+    flex: 1,
+    padding: "30px",
+    minHeight: "100vh",
+    background: "#f4f6f8",
+  },
+
   logo: {
     fontSize: "20px",
     marginBottom: "25px",
@@ -1486,12 +1673,7 @@ const styles = {
     marginBottom: "8px",
     transition: "0.3s",
   },
-  main: {
-    marginLeft: "240px",
-    flex: 1,
-    padding: "30px",
-    overflowY: "auto",
-  },
+ 
   dashboardGrid: {
     display: "flex",
     flexDirection: "column",
@@ -1510,23 +1692,25 @@ const styles = {
     flex: 1,
   },
   tableWrapper: {
+    width: "100%",
     overflowX: "auto",
+    marginTop: "15px",
   },
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    marginTop: "15px",
+    textAlign: "left",
   },
   th: {
-    border: "1px solid #ddd",
-    background: "#f8f8f8",
+    border: "1px solid #ccc",
     padding: "10px",
-    textAlign: "left",
+    background: "#e9f5f3",
+    fontWeight: "600",
   },
   td: {
-    border: "1px solid #ddd",
+    border: "1px solid #ccc",
     padding: "10px",
-    textAlign: "left",
+    background: "#fff",
   },
 };
 

@@ -307,11 +307,11 @@ export const uploadSheets = async (req, res) => {
     if (!sheets || sheets.length === 0)
       return res.status(400).json({ message: "No sheet data provided" });
 
-    if (user.role !== "admin" && user.role !== "publisher") {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to upload sheets" });
-    }
+    // if (user.role !== "admin" && user.role !== "publisher") {
+    //   return res
+    //     .status(403)
+    //     .json({ message: "You are not authorized to upload sheets" });
+    // }
 
     const savedSheets = await Sheet.insertMany(
       sheets.map((sheet) => ({
@@ -406,3 +406,14 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getAlldata = async (req, res) => {
+  try {
+    const allSheets = await Sheet.find()
+    return res.status(200).json(allSheets);
+  } catch (err) {
+    console.error("Error fetching sheets:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+

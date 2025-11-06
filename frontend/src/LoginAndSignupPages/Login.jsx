@@ -278,12 +278,16 @@ const styles = {
   container: {
     background: "linear-gradient(135deg, #F5F9FF, #E3F2FD)",
     height: "100vh",
+    width: "80vw",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     fontFamily: "Inter, sans-serif",
+   
   },
+
   card: {
+    marginLeft:"-15%",
     background: "#fff",
     padding: "40px",
     borderRadius: "16px",

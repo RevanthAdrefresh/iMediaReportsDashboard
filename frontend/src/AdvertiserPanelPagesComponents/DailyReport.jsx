@@ -1,7 +1,5 @@
-
-
 import React, { useState, useEffect } from "react";
-import * as XLSX from "xlsx";
+import axios from "axios";
 import {
   ComposedChart,
   Bar,
@@ -22,34 +20,10 @@ const OttReport = () => {
     clicks: 0,
     ctr: 0,
   });
-const stored = localStorage.getItem("ottData");
-    console.log(stored);
-  // ✅ Load from localStorage once
-  useEffect(() => {
-    const stored = localStorage.getItem("ottData");
-    console.log(stored);
-    
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setData(parsed);
-          calculateTotals(parsed);
-        }
-      } catch (e) {
-        console.error("Failed to parse saved data", e);
-      }
-    }
-  }, []);
 
-  const excelSerialToDate = (serial) => {
-    if (typeof serial === "number") {
-      const utcDays = Math.floor(serial - 25569);
-      const d = new Date(utcDays * 86400 * 1000);
-      return d.toISOString().split("T")[0];
-    }
-    return serial;
-  };
+  // ✅ Extract token from localStorage
+  const userToken = JSON.parse(localStorage.getItem("jwt"))?.token;
+  console.log(userToken, "token");
 
   const cleanNumber = (val) => {
     if (!val) return 0;
@@ -57,49 +31,44 @@ const stored = localStorage.getItem("ottData");
     return isNaN(num) ? 0 : num;
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const wb = XLSX.read(event.target.result, { type: "array" });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-
-      if (!json.length) return;
-
-      const headers = Object.keys(json[0]);
-      const dateKey = headers.find((h) => h.toLowerCase().includes("date")) || headers[0];
-      const spendKey = headers.find((h) => h.toLowerCase().includes("spend") || h.toLowerCase().includes("revenue"));
-      const impKey = headers.find((h) => h.toLowerCase().includes("impression"));
-      const clickKey = headers.find((h) => h.toLowerCase().includes("click"));
-      const ctrKey = headers.find((h) => h.toLowerCase().includes("ctr"));
-
-      const formatted = json.map((r) => ({
-        date: excelSerialToDate(r[dateKey]),
-        spend: cleanNumber(r[spendKey]),
-        impressions: cleanNumber(r[impKey]),
-        clicks: cleanNumber(r[clickKey]),
-        ctr: cleanNumber(r[ctrKey]),
-      }));
-
-      if (formatted.length > 0) {
-        setData(formatted);
-        localStorage.setItem("ottData", JSON.stringify(formatted));
-        calculateTotals(formatted);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  };
-
   const calculateTotals = (rows) => {
-    const spend = rows.reduce((a, b) => a + b.spend, 0);
-    const impressions = rows.reduce((a, b) => a + b.impressions, 0);
-    const clicks = rows.reduce((a, b) => a + b.clicks, 0);
+    const spend = rows.reduce((a, b) => a + (b.spend || 0), 0);
+    const impressions = rows.reduce((a, b) => a + (b.impressions || 0), 0);
+    const clicks = rows.reduce((a, b) => a + (b.clicks || 0), 0);
     const ctr = impressions ? ((clicks / impressions) * 100).toFixed(2) : 0;
     setTotals({ spend, impressions, clicks, ctr });
   };
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/getallsheets", {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      // ✅ Take the first sheet data
+      const sheetData = res.data[0]?.data || [];
+
+      // ✅ Normalize data keys
+      const formatted = sheetData.map((r) => ({
+        date: r["Date"] || r["date"] || "",
+        spend: cleanNumber(r["Spend"] || r["spend"]),
+        impressions: cleanNumber(r["Impressions"] || r["impressions"]),
+        clicks: cleanNumber(r["Clicks"] || r["clicks"]),
+        ctr: cleanNumber(r["CTR"] || r["ctr"]),
+      }));
+
+      setData(formatted);
+      calculateTotals(formatted);
+    } catch (error) {
+      console.error("Error fetching OTT data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div
@@ -114,10 +83,6 @@ const stored = localStorage.getItem("ottData");
         📊 OTT Daily Performance
       </h2>
 
-      <div style={{ textAlign: "center", marginBottom: 20 }}>
-        <input type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
-      </div>
-
       {/* KPI Cards */}
       {data.length > 0 && (
         <div
@@ -131,7 +96,10 @@ const stored = localStorage.getItem("ottData");
         >
           {[
             { label: "Total Spend", value: `$${totals.spend.toFixed(2)}` },
-            { label: "Total Impressions", value: totals.impressions.toLocaleString() },
+            {
+              label: "Total Impressions",
+              value: totals.impressions.toLocaleString(),
+            },
             { label: "Total Clicks", value: totals.clicks.toLocaleString() },
             { label: "CTR", value: `${totals.ctr}%` },
           ].map((item, i) => (
@@ -147,7 +115,9 @@ const stored = localStorage.getItem("ottData");
               }}
             >
               <div style={{ fontSize: 13, color: "#888" }}>{item.label}</div>
-              <div style={{ fontSize: 20, fontWeight: "bold", color: "#222" }}>
+              <div
+                style={{ fontSize: 20, fontWeight: "bold", color: "#222" }}
+              >
                 {item.value}
               </div>
             </div>
@@ -170,11 +140,18 @@ const stored = localStorage.getItem("ottData");
             <ComposedChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
-              <YAxis yAxisId="left" label={{ value: "Spend ($)", angle: -90, position: "insideLeft" }} />
+              <YAxis
+                yAxisId="left"
+                label={{ value: "Spend ($)", angle: -90, position: "insideLeft" }}
+              />
               <YAxis
                 yAxisId="right"
                 orientation="right"
-                label={{ value: "Clicks", angle: 90, position: "insideRight" }}
+                label={{
+                  value: "Clicks",
+                  angle: 90,
+                  position: "insideRight",
+                }}
               />
               <Tooltip />
               <Legend />
@@ -198,7 +175,7 @@ const stored = localStorage.getItem("ottData");
         </div>
       ) : (
         <p style={{ textAlign: "center", color: "#888" }}>
-          No data available. Upload a file to view the chart.
+          No data available from backend.
         </p>
       )}
     </div>

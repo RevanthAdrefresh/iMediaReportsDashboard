@@ -12,17 +12,23 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // import DashboardView from "./ExcelDashboard";
 // import UploadSheet from "./Uploadsheet";
-import MainDashboard from "./RealDashBoard";
-import OTTReport from "./OttReport";
-import VideoReport from "./NewVideoReport";
-import AdWidget from "./Advertise";
-import SummaryReport from "./Summary";
-import Signup from "./Signup";
-import Login from "./Login";
-import AdminPanel from "./AdminPanel";
+import MainDashboard from "./AdvertiserPanelPagesComponents/RealDashBoard";
+import OTTReport from "./AdvertiserPanelPagesComponents/OttReport";
+import VideoReport from "./AdvertiserPanelPagesComponents/NewVideoReport";
+import AdWidget from "./AdvertiserPanelPagesComponents/Advertise";
+import SummaryReport from "./AdvertiserPanelPagesComponents/Summary";
+import Signup from "./LoginAndSignupPages/Signup";
+import Login from "./LoginAndSignupPages/Login";
+import AdminPanel from "./AdminPanelPagesComponents/AdminPanel";
 
-import PublisherPanel from "./PublisherPanel";
-import AdvertiserPanel from "./AdvertiserPanel";
+// import PublisherPanel from "../PublisherPanelPagesComponents/PublisherPanel";
+import AdvertiserPanel from "./AdvertiserPanelPagesComponents/AdvertiserPanel";
+import ViewUploads from "./PublisherPanelPagesComponents/ViewUploads";
+import DownloadSheets from "./PublisherPanelPagesComponents/DownloadSheets";import PublisherPanel from "./PublisherPanelPagesComponents/PublisherPanel";
+import PublisherEarnings from "./PublisherPanelPagesComponents/PublisherLevelEarnings";
+
+
+// import PublisherEarnings from "../PublisherPanelPagesComponents/PublisherLevelEarnings";
 // AdvertiserPanel
 // import PublisherPanel from "./AdvertiserPanell";
 // import AdvertiserPanel from "./PublisherPanel";
@@ -63,10 +69,12 @@ export default function App() {
                                                         <Route path="/advertiserpanel" element={<AdvertiserPanel/>}></Route>
                                                                                     <Route path="/publisherpanel" element={<PublisherPanel/>}></Route>
 
+                                                                                    <Route path="/viewuploads" element={<ViewUploads/>}></Route>
 
                                                     
 
-
+<Route path="/downloadsheets" element={<DownloadSheets/>}></Route>
+<Route path="/publisherlevelearnings" element={<PublisherEarnings/>}></Route>
              
 
         </Routes>
