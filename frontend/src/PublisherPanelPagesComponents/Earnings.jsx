@@ -1,466 +1,1112 @@
-// // // // import React from "react";
-// // // // import { styles } from "./styles";
-
-// // // // const earningsData = [
-// // // //   { Date: "Nov 1", Platform: "YouTube", "Revenue ($)": 180 },
-// // // //   { Date: "Nov 2", Platform: "OTT", "Revenue ($)": 210 },
-// // // //   { Date: "Nov 3", Platform: "Website", "Revenue ($)": 190 },
-// // // //   { Date: "Nov 4", Platform: "YouTube", "Revenue ($)": 260 },
-// // // // ];
-
-// // // // const Earnings = () => (
-// // // //   <div style={styles.card}>
-// // // //     <h3>💰 Earnings Summary</h3>
-// // // //     <div style={styles.tableWrapper}>
-// // // //       <table style={styles.table}>
-// // // //         <thead>
-// // // //           <tr>
-// // // //             {Object.keys(earningsData[0]).map((col) => (
-// // // //               <th key={col} style={styles.th}>{col}</th>
-// // // //             ))}
-// // // //           </tr>
-// // // //         </thead>
-// // // //         <tbody>
-// // // //           {earningsData.map((row, i) => (
-// // // //             <tr key={i}>
-// // // //               {Object.values(row).map((val, j) => (
-// // // //                 <td key={j} style={styles.td}>{val}</td>
-// // // //               ))}
-// // // //             </tr>
-// // // //           ))}
-// // // //         </tbody>
-// // // //       </table>
-// // // //     </div>
-// // // //   </div>
-// // // // );
-
-// // // // export default Earnings;
-
-// // // import React, { useEffect, useState } from "react";
-// // // import axios from "axios";
-// // // import { styles } from "./styles";
-
-// // // const Earnings = () => {
-// // //   const [earnings, setEarnings] = useState([]);
-
-// // //   useEffect(() => {
-// // //     const fetchEarnings = async () => {
-// // //       try {
-// // //         // const usertoken =JSON.parse( localStorage.getItem("jwt")).token
-
-// // //         const res = await axios.get("http://localhost:5000/api/getalldata");
-
-// // //         const sheets = res.data;
-// // //         console.log(sheets);
-        
-
-// // //         // Map to accumulate revenue by Date + Platform
-// // //         const earningsMap = {};
-
-// // //         sheets.forEach(sheet => {
-// // //           const sheetName = sheet.name?.toLowerCase() || "";
-// // //           const uploadDate = new Date(sheet.createdAt).toDateString();
-
-// // //           sheet.data.forEach(row => {
-// // //             // Normalize column keys
-// // //             const clean = {};
-// // //             Object.keys(row).forEach(k => (clean[k.trim()] = row[k]));
-
-// // //             const impressions = Number(clean.Impressions || 0);
-// // //             const clicks = Number(clean.Clicks || 0);
-// // //             const cpm = Number(clean.CPM || 0);
-// // //             const cpc = Number(clean.CPC || 0);
-// // //             const platform = clean.Platform || clean["Platform"] || "Unknown";
-
-// // //             // Revenue logic
-// // //             let revenue = 0;
-// // //             if (cpc > 0 && clicks > 0) revenue = clicks * cpc;
-// // //             else if (cpm > 0 && impressions > 0) revenue = (impressions / 1000) * cpm;
-// // //             else revenue = (impressions / 1000) * 1.5;
-
-// // //             const key = `${uploadDate}_${platform}`;
-
-// // //             if (!earningsMap[key]) {
-// // //               earningsMap[key] = {
-// // //                 Date: uploadDate,
-// // //                 Platform: platform,
-// // //                 Revenue: 0,
-// // //               };
-// // //             }
-
-// // //             earningsMap[key].Revenue += revenue;
-// // //           });
-// // //         });
-
-// // //         const formatted = Object.values(earningsMap).map(e => ({
-// // //           Date: e.Date,
-// // //           Platform: e.Platform,
-// // //           Revenue: Number(e.Revenue.toFixed(2)),
-// // //         }));
-
-// // //         setEarnings(formatted);
-// // //       } catch (err) {
-// // //         console.error("Error loading earnings:", err);
-// // //       }
-// // //     };
-
-// // //     fetchEarnings();
-// // //   }, []);
-
-// // //   return (
-// // //     <div style={styles.card}>
-// // //       <h3>💰 Earnings Summary</h3>
-// // //       <div style={styles.tableWrapper}>
-// // //         <table style={styles.table}>
-// // //           <thead>
-// // //             <tr>
-// // //               <th style={styles.th}>Date</th>
-// // //               <th style={styles.th}>Platform</th>
-// // //               <th style={styles.th}>Revenue ($)</th>
-// // //             </tr>
-// // //           </thead>
-// // //           <tbody>
-// // //             {earnings.length > 0 ? (
-// // //               earnings.map((row, i) => (
-// // //                 <tr key={i}>
-// // //                   <td style={styles.td}>{row.Date}</td>
-// // //                   <td style={styles.td}>{row.Platform}</td>
-// // //                   <td style={styles.td}>${row.Revenue}</td>
-// // //                 </tr>
-// // //               ))
-// // //             ) : (
-// // //               <tr>
-// // //                 <td style={styles.td} colSpan="3">Loading / No Earnings Found</td>
-// // //               </tr>
-// // //             )}
-// // //           </tbody>
-// // //         </table>
-// // //       </div>
-// // //     </div>
-// // //   );
-// // // };
-
-// // // export default Earnings;
-
-// // import React, { useEffect, useState } from "react";
-// // import axios from "axios";
-// // import { styles } from "./styles";
-
-// // const Earnings = () => {
-// //   const [earnings, setEarnings] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchEarnings = async () => {
-// //       try {
-// //         // const token = localStorage.getItem("token");
-
-// //         const res = await axios.get("http://localhost:5000/api/getalldata");
-
-// //         const sheets = res.data;
-
-// //         const platformMap = {
-// //           0: "OTT",
-// //           1: "Video",
-// //           2: "Ad Widget"
-// //         };
-
-// //         const earningsMap = {};
-
-// //         sheets.forEach((sheet, index) => {
-// //           if (index > 2) return; // ✅ Ignore Sheet4 and anything above 2
-
-// //           const platform = platformMap[index] || "Unknown";
-// //           const uploadDate = new Date(sheet.createdAt).toDateString();
-
-// //           sheet.data.forEach(row => {
-// //             const clean = {};
-// //             Object.keys(row).forEach(k => clean[k.trim()] = row[k]);
-
-// //             const impressions = Number(clean.Impressions || 0);
-// //             const clicks = Number(clean.Clicks || 0);
-// //             const cpm = Number(clean.CPM || 0);
-// //             const cpc = Number(clean.CPC || 0);
-
-// //             // ✅ Revenue logic
-// //             let revenue = 0;
-// //             if (cpc > 0 && clicks > 0) revenue = clicks * cpc;
-// //             else if (cpm > 0 && impressions > 0) revenue = (impressions / 1000) * cpm;
-// //             else revenue = (impressions / 1000) * 1.5;
-
-// //             const key = `${uploadDate}_${platform}`;
-
-// //             if (!earningsMap[key]) {
-// //               earningsMap[key] = {
-// //                 Date: uploadDate,
-// //                 Platform: platform,
-// //                 Revenue: 0
-// //               };
-// //             }
-
-// //             earningsMap[key].Revenue += revenue;
-// //           });
-// //         });
-
-// //         const formatted = Object.values(earningsMap).map(e => ({
-// //           Date: e.Date,
-// //           Platform: e.Platform,
-// //           Revenue: e.Revenue.toFixed(2)
-// //         }));
-
-// //         setEarnings(formatted);
-// //       } catch (err) {
-// //         console.error("Error loading earnings:", err);
-// //       }
-// //     };
-
-// //     fetchEarnings();
-// //   }, []);
-
-// //   return (
-// //     <div style={styles.card}>
-// //       <h3>💰 Earnings Summary</h3>
-
-// //       <div style={styles.tableWrapper}>
-// //         <table style={styles.table}>
-// //           <thead>
-// //             <tr>
-// //               <th style={styles.th}>Date</th>
-// //               <th style={styles.th}>Platform</th>
-// //               <th style={styles.th}>Revenue ($)</th>
-// //             </tr>
-// //           </thead>
-
-// //           <tbody>
-// //             {earnings.length > 0 ? (
-// //               earnings.map((row, i) => (
-// //                 <tr key={i}>
-// //                   <td style={styles.td}>{row.Date}</td>
-// //                   <td style={styles.td}>{row.Platform}</td>
-// //                   <td style={styles.td}>${row.Revenue}</td>
-// //                 </tr>
-// //               ))
-// //             ) : (
-// //               <tr>
-// //                 <td style={styles.td} colSpan="3">Loading or No Data</td>
-// //               </tr>
-// //             )}
-// //           </tbody>
-
-// //         </table>
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default Earnings;
-
 // import React, { useEffect, useState } from "react";
 // import axios from "axios";
-// import { styles } from "./styles";
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   Tooltip,
+//   ResponsiveContainer,
+//   PieChart,
+//   Pie,
+//   Cell,
+//   Legend,
+// } from "recharts";
 
-// const Earnings = () => {
-//   const [earnings, setEarnings] = useState([]);
+// const COLORS = ["#00C49F", "#FFBB28", "#0088FE", "#FF8042"];
+// const REVENUE_MULT = 1000;
 
-//   useEffect(() => {
-//     const fetchEarnings = async () => {
-//       try {
-//         // const token = localStorage.getItem("token");
+// const normalize = (s = "") =>
+//   s.toLowerCase().trim().replace(/\s+/g, "").replace(/_/g, "");
 
-//         const res = await axios.get("http://localhost:5000/api/getalldata");
-
-//         const sheets = res.data;
-//         console.log(sheets,"sheets");
-        
-
-//         // ✅ Group sheets by publisher
-//         const publisherSheets = {};
-//         sheets.forEach(sheet => {
-//           const pubId = sheet.uploadedBy?._id || sheet.uploadedBy || "Unknown";
-//           if (!publisherSheets[pubId]) publisherSheets[pubId] = [];
-//           publisherSheets[pubId].push(sheet);
-//         });
-
-//         const platformMap = {
-//           0: "OTT",
-//           1: "Video",
-//           2: "Ad Widget"
-//         };
-
-//         const earningsMap = {};
-
-//         Object.values(publisherSheets).forEach(sheetArray => {
-//           sheetArray.slice(0, 3).forEach((sheet, idx) => {
-//             const platform = platformMap[idx] || "Unknown";
-//             const uploadDate = new Date(sheet.createdAt).toDateString();
-
-//             sheet.data.forEach(row => {
-//               const clean = {};
-//               Object.keys(row).forEach(k => clean[k.trim()] = row[k]);
-
-//               const impressions = Number(clean.Impressions || 0);
-//               const clicks = Number(clean.Clicks || 0);
-//               const cpm = Number(clean.CPM || 0);
-//               const cpc = Number(clean.CPC || 0);
-
-//               // ✅ Revenue logic
-//               let revenue = 0;
-//               if (cpc > 0 && clicks > 0) revenue = clicks * cpc;
-//               else if (cpm > 0 && impressions > 0) revenue = (impressions / 1000) * cpm;
-//               else revenue = (impressions / 1000) * 1.5;
-
-//               const key = `${uploadDate}_${platform}`;
-
-//               if (!earningsMap[key]) {
-//                 earningsMap[key] = {
-//                   Date: uploadDate,
-//                   Platform: platform,
-//                   Revenue: 0
-//                 };
-//               }
-
-//               earningsMap[key].Revenue += revenue;
-//             });
-//           });
-//         });
-
-//         const formatted = Object.values(earningsMap).map(e => ({
-//           Date: e.Date,
-//           Platform: e.Platform,
-//           Revenue: e.Revenue.toFixed(2),
-//         }));
-
-//         setEarnings(formatted);
-//       } catch (err) {
-//         console.error("Error loading earnings:", err);
-//       }
-//     };
-
-//     fetchEarnings();
-//   }, []);
-
-//   return (
-//     <div style={styles.card}>
-//       <h3>💰 Earnings Summary</h3>
-
-//       <div style={styles.tableWrapper}>
-//         <table style={styles.table}>
-//           <thead>
-//             <tr>
-//               <th style={styles.th}>Date</th>
-//               <th style={styles.th}>Platform</th>
-//               <th style={styles.th}>Revenue ($)</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {earnings.length > 0 ? (
-//               earnings.map((row, i) => (
-//                 <tr key={i}>
-//                   <td style={styles.td}>{row.Date}</td>
-//                   <td style={styles.td}>{row.Platform}</td>
-//                   <td style={styles.td}>${row.Revenue}</td>
-//                 </tr>
-//               ))
-//             ) : (
-//               <tr>
-//                 <td style={styles.td} colSpan="3">Loading or No Data</td>
-//               </tr>
-//             )}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
+// const num = (v) => {
+//   if (v == null || v === "") return 0;
+//   if (typeof v === "string") return Number(v.replace(/,/g, ""));
+//   return Number(v);
 // };
 
-// export default Earnings;
+// const convertDate = (serial) => {
+//   const n = num(serial);
+//   if (!n) return "";
+//   const epoch = new Date(1899, 11, 30);
+//   return new Date(epoch.getTime() + n * 86400000)
+//     .toISOString()
+//     .slice(0, 10);
+// };
+
+// export default function Earnings() {
+//   const [activePlatform, setActivePlatform] = useState("overall");
+//   const [selectedCampaign, setSelectedCampaign] = useState("All");
+
+//   const [metrics, setMetrics] = useState({
+//     revenue: 0,
+//     impressions: 0,
+//     clicks: 0,
+//     ctr: 0,
+//   });
+
+//   const [campaignList, setCampaignList] = useState([]);
+//   const [chartData, setChartData] = useState([]);
+//   const [tableData, setTableData] = useState([]);
+
+//   const [adWidgetMetrics, setAdWidgetMetrics] = useState({
+//     revenue: 0,
+//     impressions: 0,
+//     clicks: 0,
+//     ctr: 0,
+//   });
+
+//   const [adWidgetDailyRows, setAdWidgetDailyRows] = useState([]);
+//   const [adWidgetChart, setAdWidgetChart] = useState([]);
+
+//   /* LOAD DATA */
+//   useEffect(() => {
+//     loadData();
+//   }, [activePlatform, selectedCampaign]);
+
+//   const loadData = async () => {
+//     try {
+//       const user = JSON.parse(localStorage.getItem("jwt"))?.user;
+//       if (!user?.name) return;
+
+//       const res = await axios.get("http://localhost:5000/api/getalldata");
+//       const allSheets = res?.data?.sheets || [];
+
+//       let publisherSheets = allSheets.filter(
+//         (s) => normalize(s.publisher) === normalize(user.name)
+//       );
+
+//       publisherSheets = publisherSheets.filter(
+//         (s) => normalize(s.name) !== "summary"
+//       );
+
+//       setCampaignList([...new Set(publisherSheets.map((s) => s.campaign))]);
+
+//       /* Categorizing */
+//       const videoSheets = publisherSheets.filter((s) =>
+//         normalize(s.name).includes("video")
+//       );
+
+//       const ottSheets = publisherSheets.filter((s) =>
+//         normalize(s.name).includes("ott")
+//       );
+
+//       const adWidgetSheets = publisherSheets.filter(
+//         (s) => normalize(s.name) === "adwidget"
+//       );
+
+//       /* Metric calculator */
+//       const computeMetrics = (sheets) => {
+//         const rows = sheets.flatMap((sheet) =>
+//           (sheet.data || []).map((d) => {
+//             let imps = 0;
+//             let clicks = 0;
+
+//             for (let key in d) {
+//               const k = key.toLowerCase().replace(/\s+/g, "");
+//               if (k.includes("imp") || k.includes("view")) imps = num(d[key]);
+//               if (k.includes("click")) clicks = num(d[key]);
+//             }
+
+//             return { imps, clicks };
+//           })
+//         );
+
+//         if (!rows.length)
+//           return { impressions: 0, clicks: 0, ctr: 0, revenue: 0 };
+
+//         const impressions = rows.reduce((a, r) => a + r.imps, 0);
+//         const clicks = rows.reduce((a, r) => a + r.clicks, 0);
+//         const ctr = impressions ? (clicks / impressions) * 100 : 0;
+//         const revenue = clicks * (ctr / 100) * REVENUE_MULT;
+
+//         return { impressions, clicks, ctr, revenue };
+//       };
+
+//       /* Platform-wide metrics */
+//       const videoMetrics = computeMetrics(videoSheets);
+//       const ottMetrics = computeMetrics(ottSheets);
+//       const adMetrics = computeMetrics(adWidgetSheets);
+
+//       /* ---------------- ADWIDGET FILTERING ---------------- */
+//       let adFilteredSheets = adWidgetSheets;
+//       if (selectedCampaign !== "All") {
+//         adFilteredSheets = adWidgetSheets.filter(
+//           (s) => normalize(s.campaign) === normalize(selectedCampaign)
+//         );
+//       }
+
+//       const adFilteredMetrics = computeMetrics(adFilteredSheets);
+
+//       setAdWidgetMetrics({
+//         revenue: adFilteredMetrics.revenue.toFixed(2),
+//         impressions: adFilteredMetrics.impressions,
+//         clicks: adFilteredMetrics.clicks,
+//         ctr: adFilteredMetrics.ctr.toFixed(2),
+//       });
+
+//       /* ADWIDGET daily table */
+//       setAdWidgetDailyRows(
+//         adFilteredSheets.flatMap((sheet) =>
+//           (sheet.data || []).map((r) => ({
+//             date:
+//               convertDate(num(r.Date)) ||
+//               convertDate(num(r.date)) ||
+//               convertDate(num(r.Day)),
+//             imps:
+//               num(r.Impressions) ||
+//               num(r.impressions) ||
+//               num(r.Views) ||
+//               num(r.views),
+//             clicks:
+//               num(r.Clicks) ||
+//               num(r.clicks) ||
+//               num(r["NP Clicks"]) ||
+//               num(r["NP clicks"]),
+//           }))
+//         )
+//       );
+
+//       /* ---------------- ADWIDGET CAMPAIGN-WISE CHART (Fixed) ---------------- */
+//       const adChartCampaign = {};
+
+//       adFilteredSheets.forEach((sheet) => {
+//         const revenue = (sheet.data || []).reduce((acc, r) => {
+//           const imps = num(r.Impressions) || num(r.Views);
+//           const clicks = num(r.Clicks) || num(r["NP Clicks"]);
+//           const ctr = imps ? (clicks / imps) * 100 : 0;
+//           return acc + clicks * (ctr / 100) * REVENUE_MULT;
+//         }, 0);
+
+//         adChartCampaign[sheet.campaign] =
+//           (adChartCampaign[sheet.campaign] || 0) + revenue;
+//       });
+
+//       setAdWidgetChart(
+//         Object.entries(adChartCampaign).map(([name, revenue]) => ({
+//           name,
+//           revenue: Number(revenue.toFixed(2)),
+//         }))
+//       );
+
+//       /* ---------------- Other platforms filter ---------------- */
+//       let sheetPool = [];
+
+//       if (activePlatform === "video") sheetPool = videoSheets;
+//       else if (activePlatform === "ott") sheetPool = ottSheets;
+//       else if (activePlatform === "adwidget") sheetPool = adFilteredSheets;
+//       else sheetPool = publisherSheets;
+
+//       if (selectedCampaign !== "All" && activePlatform !== "adwidget") {
+//         sheetPool = sheetPool.filter(
+//           (s) => normalize(s.campaign) === normalize(selectedCampaign)
+//         );
+//       }
+
+//       const recalculatedMetrics = computeMetrics(sheetPool);
+
+//       setMetrics({
+//         revenue: recalculatedMetrics.revenue.toFixed(2),
+//         impressions: recalculatedMetrics.impressions,
+//         clicks: recalculatedMetrics.clicks,
+//         ctr: recalculatedMetrics.ctr.toFixed(2),
+//       });
+
+//       setTableData(
+//         sheetPool.flatMap((sheet) =>
+//           (sheet.data || []).map((r) => ({
+//             date:
+//               convertDate(num(r.Date)) ||
+//               convertDate(num(r.date)) ||
+//               convertDate(num(r.Day)),
+//             imps:
+//               num(r.Impressions) ||
+//               num(r.impressions) ||
+//               num(r.Views) ||
+//               num(r.views),
+//             clicks:
+//               num(r.Clicks) ||
+//               num(r.clicks) ||
+//               num(r["NP Clicks"]) ||
+//               num(r["NP clicks"]),
+//           }))
+//         )
+//       );
+
+//       /* Overall bar/pie chart */
+//       const revenueChartData = {};
+//       sheetPool.forEach((sheet) => {
+//         const revenue = (sheet.data || []).reduce((acc, r) => {
+//           const imps = num(r.Impressions) || num(r.Views);
+//           const clicks = num(r.Clicks) || num(r["NP Clicks"]);
+//           const ctr = imps ? (clicks / imps) * 100 : 0;
+//           return acc + clicks * (ctr / 100) * REVENUE_MULT;
+//         }, 0);
+
+//         revenueChartData[sheet.campaign] =
+//           (revenueChartData[sheet.campaign] || 0) + revenue;
+//       });
+
+//       setChartData(
+//         Object.entries(revenueChartData).map(([name, revenue]) => ({
+//           name,
+//           revenue: Number(revenue.toFixed(2)),
+//         }))
+//       );
+//     } catch (err) {
+//       console.error("🔥 Error:", err);
+//     }
+//   };
+
+//   /* ---------------- UI ---------------- */
+//   return (
+//     <div style={styles.container}>
+//       {/* Sidebar */}
+//       <aside style={styles.sidebar}>
+//         <h2 style={styles.menuTitle}>Earnings Menu</h2>
+
+//         {["overall", "video", "ott", "adwidget"].map((p) => (
+//           <button
+//             key={p}
+//             onClick={() => setActivePlatform(p)}
+//             style={{
+//               ...styles.menuBtn,
+//               background: activePlatform === p ? "#00C49F" : "transparent",
+//             }}
+//           >
+//             {p.toUpperCase()}
+//           </button>
+//         ))}
+
+//         <div style={{ marginTop: 25 }}>
+//           <h3 style={{ color: "#fff" }}>Campaign</h3>
+//           <select
+//             value={selectedCampaign}
+//             onChange={(e) => setSelectedCampaign(e.target.value)}
+//             style={styles.select}
+//           >
+//             <option value="All">All</option>
+//             {campaignList.map((c, i) => (
+//               <option key={i} value={c}>
+//                 {c}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       </aside>
+
+//       <main style={styles.main}>
+//         {/* ADWIDGET VIEW */}
+//         {activePlatform === "adwidget" ? (
+//           <>
+//             <h2 style={styles.title}>
+//               ADWIDGET Earnings{" "}
+//               {selectedCampaign !== "All" ? ` - ${selectedCampaign}` : ""}
+//             </h2>
+
+//             <div style={styles.metricsRow}>
+//               <div style={styles.metricBox}>
+//                 <h4>Revenue</h4>
+//                 <p>${adWidgetMetrics.revenue}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>Impressions</h4>
+//                 <p>{adWidgetMetrics.impressions.toLocaleString()}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>Clicks</h4>
+//                 <p>{adWidgetMetrics.clicks.toLocaleString()}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>CTR</h4>
+//                 <p>{adWidgetMetrics.ctr}%</p>
+//               </div>
+//             </div>
+
+//             <div style={styles.card}>
+//               <h3>Daily Data</h3>
+//               <table style={styles.table}>
+//                 <thead>
+//                   <tr>
+//                     <th style={styles.th}>Date</th>
+//                     <th style={styles.th}>Impressions</th>
+//                     <th style={styles.th}>Clicks</th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {adWidgetDailyRows.map((row, i) => (
+//                     <tr key={i}>
+//                       <td style={styles.td}>{row.date}</td>
+//                       <td style={styles.td}>{row.imps}</td>
+//                       <td style={styles.td}>{row.clicks}</td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             </div>
+
+//             {/* CHARTS */}
+//             <div style={styles.chartRow}>
+//               <div style={styles.card}>
+//                 <h3>Revenue Share</h3>
+//                 <ResponsiveContainer width="100%" height={300}>
+//                   <PieChart>
+//                     <Pie
+//                       data={adWidgetChart}
+//                       dataKey="revenue"
+//                       nameKey="name"
+//                       outerRadius={110}
+//                       label
+//                     >
+//                       {adWidgetChart.map((_, i) => (
+//                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
+//                       ))}
+//                     </Pie>
+//                     <Tooltip />
+//                     <Legend />
+//                   </PieChart>
+//                 </ResponsiveContainer>
+//               </div>
+
+//               <div style={styles.card}>
+//                 <h3>Revenue Trend</h3>
+//                 <ResponsiveContainer width="100%" height={300}>
+//                   <BarChart data={adWidgetChart}>
+//                     <XAxis dataKey="name" />
+//                     <YAxis />
+//                     <Tooltip />
+//                     <Bar dataKey="revenue" fill="#00C49F" />
+//                   </BarChart>
+//                 </ResponsiveContainer>
+//               </div>
+//             </div>
+//           </>
+//         ) : (
+//           <>
+//             {/* OTHER PLATFORMS */}
+//             <h2 style={styles.title}>
+//               {activePlatform.toUpperCase()} Earnings{" "}
+//               {selectedCampaign !== "All" && activePlatform !== "overall"
+//                 ? ` - ${selectedCampaign}`
+//                 : ""}
+//             </h2>
+
+//             <div style={styles.metricsRow}>
+//               <div style={styles.metricBox}>
+//                 <h4>Revenue</h4>
+//                 <p>${metrics.revenue}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>Impressions</h4>
+//                 <p>{metrics.impressions.toLocaleString()}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>Clicks</h4>
+//                 <p>{metrics.clicks.toLocaleString()}</p>
+//               </div>
+//               <div style={styles.metricBox}>
+//                 <h4>CTR</h4>
+//                 <p>{metrics.ctr}%</p>
+//               </div>
+//             </div>
+
+//             {activePlatform !== "overall" && (
+//               <div style={styles.card}>
+//                 <h3>Data Table</h3>
+//                 <table style={styles.table}>
+//                   <thead>
+//                     <tr>
+//                       <th style={styles.th}>Date</th>
+//                       <th style={styles.th}>Impressions</th>
+//                       <th style={styles.th}>Clicks</th>
+//                     </tr>
+//                   </thead>
+//                   <tbody>
+//                     {tableData.map((row, i) => (
+//                       <tr key={i}>
+//                         <td style={styles.td}>{row.date}</td>
+//                         <td style={styles.td}>{row.imps}</td>
+//                         <td style={styles.td}>{row.clicks}</td>
+//                       </tr>
+//                     ))}
+//                   </tbody>
+//                 </table>
+//               </div>
+//             )}
+
+//             <div style={styles.chartRow}>
+//               <div style={styles.card}>
+//                 <h3>Revenue Share</h3>
+//                 <ResponsiveContainer width="100%" height={300}>
+//                   <PieChart>
+//                     <Pie
+//                       data={chartData}
+//                       dataKey="revenue"
+//                       nameKey="name"
+//                       outerRadius={110}
+//                       label
+//                     >
+//                       {chartData.map((_, i) => (
+//                         <Cell key={i} fill={COLORS[i % COLORS.length]} />
+//                       ))}
+//                     </Pie>
+//                     <Tooltip />
+//                     <Legend />
+//                   </PieChart>
+//                 </ResponsiveContainer>
+//               </div>
+
+//               <div style={styles.card}>
+//                 <h3>Revenue Trend</h3>
+//                 <ResponsiveContainer width="100%" height={300}>
+//                   <BarChart data={chartData}>
+//                     <XAxis dataKey="name" />
+//                     <YAxis />
+//                     <Tooltip />
+//                     <Bar dataKey="revenue" fill="#00C49F" />
+//                   </BarChart>
+//                 </ResponsiveContainer>
+//               </div>
+//             </div>
+//           </>
+//         )}
+//       </main>
+//     </div>
+//   );
+// }
+
+// /* ✅ STYLES */
+// const styles = {
+//   container: {
+//     display: "flex",
+//     minHeight: "100vh",
+//     background: "#f4f6f8",
+//   },
+//   sidebar: {
+//     width: "240px",
+//     background: "#002b36",
+//     color: "#fff",
+//     padding: "20px",
+//     height: "100vh",
+//     position: "fixed",
+//     left: 0,
+//     top: 0,
+//     overflowY: "auto",
+//   },
+//   main: {
+//     flex: 1,
+//     padding: "30px",
+//     marginLeft: "240px",
+//     width: "calc(100% - 240px)",
+//   },
+//   menuTitle: { fontSize: "18px", fontWeight: "bold", marginBottom: "20px" },
+//   menuBtn: {
+//     width: "100%",
+//     padding: "12px",
+//     borderRadius: "6px",
+//     marginBottom: "10px",
+//     border: "none",
+//     cursor: "pointer",
+//     color: "#fff",
+//     fontSize: "16px",
+//   },
+//   select: {
+//     width: "100%",
+//     padding: "10px",
+//     borderRadius: "6px",
+//     marginTop: "10px",
+//   },
+//   title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
+//   metricsRow: {
+//     display: "flex",
+//     gap: "15px",
+//     flexWrap: "wrap",
+//     marginBottom: "30px",
+//   },
+//   metricBox: {
+//     flex: "1 1 250px",
+//     background: "#fff",
+//     padding: "25px",
+//     borderRadius: "10px",
+//     textAlign: "center",
+//     boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+//   },
+//   card: {
+//     background: "#fff",
+//     padding: "20px",
+//     borderRadius: "10px",
+//     marginBottom: "20px",
+//     flex: 1,
+//     minWidth: "380px",
+//   },
+//   chartRow: {
+//     display: "flex",
+//     gap: "20px",
+//     flexWrap: "wrap",
+//   },
+//   table: {
+//     width: "100%",
+//     borderCollapse: "collapse",
+//     marginTop: "15px",
+//   },
+//   th: { border: "1px solid black", padding: "10px", background: "#ddd" },
+//   td: { border: "1px solid black", padding: "10px" },
+// };
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { styles } from "../styles";
-import { useNavigate } from "react-router-dom";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
-const Earnings = () => {
-  const [publishers, setPublishers] = useState([]);
-  const navigate = useNavigate();
+const COLORS = ["#00C49F", "#FFBB28", "#0088FE", "#FF8042"];
+
+// ✅ CPM Revenue Formula
+const CPM_VALUE = 10; // You can change this anytime
+
+const normalize = (s = "") =>
+  s.toLowerCase().trim().replace(/\s+/g, "").replace(/_/g, "");
+
+const num = (v) => {
+  if (v == null || v === "") return 0;
+  if (typeof v === "string") return Number(v.replace(/,/g, ""));
+  return Number(v);
+};
+
+const convertDate = (serial) => {
+  const n = num(serial);
+  if (!n) return "";
+  const epoch = new Date(1899, 11, 30);
+  return new Date(epoch.getTime() + n * 86400000)
+    .toISOString()
+    .slice(0, 10);
+};
+
+export default function Earnings() {
+  const [activePlatform, setActivePlatform] = useState("overall");
+  const [selectedCampaign, setSelectedCampaign] = useState("All");
+
+  const [metrics, setMetrics] = useState({
+    revenue: 0,
+    impressions: 0,
+    clicks: 0,
+    ctr: 0,
+  });
+
+  const [campaignList, setCampaignList] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+
+  const [adWidgetMetrics, setAdWidgetMetrics] = useState({
+    revenue: 0,
+    impressions: 0,
+    clicks: 0,
+    ctr: 0,
+  });
+
+  const [adWidgetDailyRows, setAdWidgetDailyRows] = useState([]);
+  const [adWidgetChart, setAdWidgetChart] = useState([]);
 
   useEffect(() => {
-    const fetchEarnings = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/getalldata", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+    loadData();
+  }, [activePlatform, selectedCampaign]);
 
-        const sheets = res.data;
-        const group = {};
+  const loadData = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("jwt"))?.user;
+      if (!user?.name) return;
 
-        sheets.forEach(sheet => {
-          const pid = sheet.uploadedBy?._id || sheet.uploadedBy || "Unknown";
-          if (!group[pid]) group[pid] = { publisher: pid, revenue: 0 };
+      const res = await axios.get("http://localhost:5000/api/getalldata");
+      const allSheets = res?.data?.sheets || [];
 
-          sheet.data.forEach(row => {
-            const clean = {};
-            Object.keys(row).forEach(k => clean[k.trim()] = row[k]);
+      let publisherSheets = allSheets.filter(
+        (s) => normalize(s.publisher) === normalize(user.name)
+      );
 
-            const imps = Number(clean.Impressions || 0);
-            const clicks = Number(clean.Clicks || 0);
-            const cpm = Number(clean.CPM || 0);
-            const cpc = Number(clean.CPC || 0);
+      publisherSheets = publisherSheets.filter(
+        (s) => normalize(s.name) !== "summary"
+      );
 
-            let rev = 0;
-            if (cpc > 0 && clicks > 0) rev = clicks * cpc;
-            else if (cpm > 0 && imps > 0) rev = (imps / 1000) * cpm;
-            else rev = (imps / 1000) * 1.5;
+      setCampaignList([...new Set(publisherSheets.map((s) => s.campaign))]);
 
-            group[pid].revenue += rev;
+      const videoSheets = publisherSheets.filter((s) =>
+        normalize(s.name).includes("video")
+      );
+      const ottSheets = publisherSheets.filter((s) =>
+        normalize(s.name).includes("ott")
+      );
+      const adWidgetSheets = publisherSheets.filter(
+        (s) => normalize(s.name) === "adwidget"
+      );
+
+      /* ✅ Universal CPM revenue-based metrics */
+      const computeMetrics = (sheets) => {
+        let totalImpressions = 0;
+        let totalClicks = 0;
+
+        sheets.forEach((sheet) => {
+          (sheet.data || []).forEach((r) => {
+            Object.keys(r).forEach((k) => {
+              const key = k.toLowerCase().replace(/\s+/g, "");
+              if (key.includes("imp") || key.includes("view"))
+                totalImpressions += num(r[k]);
+              if (key.includes("click")) totalClicks += num(r[k]);
+            });
           });
         });
 
-        setPublishers(Object.values(group));
-      } catch (err) {
-        console.error(err);
+        const ctr = totalImpressions
+          ? ((totalClicks / totalImpressions) * 100).toFixed(2)
+          : 0;
+
+        const revenue = ((totalImpressions / 1000) * CPM_VALUE).toFixed(2);
+
+        return {
+          impressions: totalImpressions,
+          clicks: totalClicks,
+          ctr,
+          revenue,
+        };
+      };
+
+      /* Apply CPM logic */
+      const videoMetrics = computeMetrics(videoSheets);
+      const ottMetrics = computeMetrics(ottSheets);
+      const adMetrics = computeMetrics(adWidgetSheets);
+
+      /* ✅ ADWIDGET Campaign Filter */
+      let adFiltered = adWidgetSheets;
+      if (selectedCampaign !== "All") {
+        adFiltered = adWidgetSheets.filter(
+          (s) => normalize(s.campaign) === normalize(selectedCampaign)
+        );
       }
-    };
 
-    fetchEarnings();
-  }, []);
+      const adFilteredMetrics = computeMetrics(adFiltered);
 
-  const handleView = (publisherId) => {
-    navigate("/publisherlevelearnings", { state: { publisherId } });
+      setAdWidgetMetrics(adFilteredMetrics);
+
+      /* ✅ Daily rows for adwidget */
+      setAdWidgetDailyRows(
+        adFiltered.flatMap((sheet) =>
+          (sheet.data || []).map((r) => {
+            const imps =
+              num(r.Impressions) ||
+              num(r.Views) ||
+              num(r.impressions) ||
+              num(r.views);
+
+            const clicks =
+              num(r.Clicks) ||
+              num(r["NP Clicks"]) ||
+              num(r.clicks) ||
+              num(r["NP clicks"]);
+
+            const revenue = ((imps / 1000) * CPM_VALUE).toFixed(2);
+
+            const ctr = imps ? ((clicks / imps) * 100).toFixed(2) : 0;
+
+            return {
+              date:
+                convertDate(num(r.Date)) ||
+                convertDate(num(r.date)) ||
+                convertDate(num(r.Day)),
+              imps,
+              clicks,
+              ctr,
+              revenue,
+            };
+          })
+        )
+      );
+
+      /* ✅ Campaign-wise revenue for adwidget (CPM-based) */
+      const adChartObj = {};
+      adFiltered.forEach((sheet) => {
+        const impressions = (sheet.data || []).reduce(
+          (sum, r) =>
+            sum +
+            num(r.Impressions) +
+            num(r.Views) +
+            num(r.impressions) +
+            num(r.views),
+          0
+        );
+
+        const revenue = ((impressions / 1000) * CPM_VALUE).toFixed(2);
+
+        adChartObj[sheet.campaign] =
+          (adChartObj[sheet.campaign] || 0) + Number(revenue);
+      });
+
+      setAdWidgetChart(
+        Object.entries(adChartObj).map(([name, revenue]) => ({
+          name,
+          revenue,
+        }))
+      );
+
+      /* ✅ Aggregate others */
+      let sheetPool = [];
+      if (activePlatform === "video") sheetPool = videoSheets;
+      else if (activePlatform === "ott") sheetPool = ottSheets;
+      else if (activePlatform === "adwidget") sheetPool = adFiltered;
+      else sheetPool = publisherSheets;
+
+      if (selectedCampaign !== "All" && activePlatform !== "adwidget") {
+        sheetPool = sheetPool.filter(
+          (s) => normalize(s.campaign) === normalize(selectedCampaign)
+        );
+      }
+
+      const platformMetrics = computeMetrics(sheetPool);
+      setMetrics(platformMetrics);
+
+      /* ✅ Data table rows */
+      setTableData(
+        sheetPool.flatMap((sheet) =>
+          (sheet.data || []).map((r) => {
+            const imps =
+              num(r.Impressions) ||
+              num(r.Views) ||
+              num(r.impressions) ||
+              num(r.views);
+
+            const clicks =
+              num(r.Clicks) ||
+              num(r["NP Clicks"]) ||
+              num(r.clicks) ||
+              num(r["NP clicks"]);
+
+            const ctr = imps ? ((clicks / imps) * 100).toFixed(2) : 0;
+
+            const revenue = ((imps / 1000) * CPM_VALUE).toFixed(2);
+
+            return {
+              date:
+                convertDate(num(r.Date)) ||
+                convertDate(num(r.date)) ||
+                convertDate(num(r.Day)),
+              imps,
+              clicks,
+              ctr,
+              revenue,
+            };
+          })
+        )
+      );
+
+      /* ✅ Revenue chart */
+      const chartObj = {};
+      sheetPool.forEach((sheet) => {
+        const impressions = (sheet.data || []).reduce(
+          (sum, r) =>
+            sum +
+            num(r.Impressions) +
+            num(r.Views) +
+            num(r.impressions) +
+            num(r.views),
+          0
+        );
+
+        const revenue = ((impressions / 1000) * CPM_VALUE).toFixed(2);
+
+        chartObj[sheet.campaign] =
+          (chartObj[sheet.campaign] || 0) + Number(revenue);
+      });
+
+      setChartData(
+        Object.entries(chartObj).map(([name, revenue]) => ({
+          name,
+          revenue,
+        }))
+      );
+    } catch (err) {
+      console.error("🔥 Error:", err);
+    }
   };
 
   return (
-    <div style={styles.card}>
-      <h3>📊 Publisher Earnings</h3>
+    <div style={styles.container}>
+      <aside style={styles.sidebar}>
+        <h2 style={styles.menuTitle}>Earnings Menu</h2>
 
-      <table style={styles.table}>
-        <thead>
-          <tr>
-            <th style={styles.th}>Publisher ID</th>
-            <th style={styles.th}>Total Revenue ($)</th>
-            <th style={styles.th}>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {publishers.map((p,i)=>(
-            <tr key={i}>
-              <td style={styles.td}>{p.publisher}</td>
-              <td style={styles.td}>${p.revenue.toFixed(2)}</td>
-              <td style={styles.td}>
-                <button
-                  onClick={() => handleView(p.publisher)}
-                  style={{ padding:"6px 10px",background:"#007bff",color:"#fff",border:"none",borderRadius:"5px" }}
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {["overall", "video", "ott", "adwidget"].map((p) => (
+          <button
+            key={p}
+            onClick={() => setActivePlatform(p)}
+            style={{
+              ...styles.menuBtn,
+              background: activePlatform === p ? "#00C49F" : "transparent",
+            }}
+          >
+            {p.toUpperCase()}
+          </button>
+        ))}
+
+        <div style={{ marginTop: 25 }}>
+          <h3 style={{ color: "#fff" }}>Campaign</h3>
+
+          <select
+            value={selectedCampaign}
+            onChange={(e) => setSelectedCampaign(e.target.value)}
+            style={styles.select}
+          >
+            <option value="All">All</option>
+            {campaignList.map((c, i) => (
+              <option key={i} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+      </aside>
+
+      <main style={styles.main}>
+        {activePlatform === "adwidget" ? (
+          <>
+            <h2 style={styles.title}>
+              ADWIDGET Earnings{" "}
+              {selectedCampaign !== "All" ? ` - ${selectedCampaign}` : ""}
+            </h2>
+
+            <div style={styles.metricsRow}>
+              <div style={styles.metricBox}>
+                <h4>Revenue</h4>
+                <p>${adWidgetMetrics.revenue}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>Impressions</h4>
+                <p>{adWidgetMetrics.impressions.toLocaleString()}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>Clicks</h4>
+                <p>{adWidgetMetrics.clicks.toLocaleString()}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>CTR</h4>
+                <p>{adWidgetMetrics.ctr}%</p>
+              </div>
+            </div>
+
+            {/* ✅ ADWIDGET TABLE WITH CTR + REVENUE */}
+            <div style={styles.card}>
+              <h3>Daily Data (CPM Based)</h3>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Date</th>
+                    <th style={styles.th}>Impressions</th>
+                    <th style={styles.th}>Clicks</th>
+                    <th style={styles.th}>CTR%</th>
+                    <th style={styles.th}>Revenue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adWidgetDailyRows.map((row, i) => (
+                    <tr key={i}>
+                      <td style={styles.td}>{row.date}</td>
+                      <td style={styles.td}>{row.imps}</td>
+                      <td style={styles.td}>{row.clicks}</td>
+                      <td style={styles.td}>{row.ctr}</td>
+                      <td style={styles.td}>${row.revenue}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div style={styles.chartRow}>
+              <div style={styles.card}>
+                <h3>Revenue Share</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={adWidgetChart}
+                      dataKey="revenue"
+                      nameKey="name"
+                      outerRadius={110}
+                      label
+                    >
+                      {adWidgetChart.map((_, i) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div style={styles.card}>
+                <h3>Revenue Trend</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={adWidgetChart}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="revenue" fill="#00C49F" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 style={styles.title}>
+              {activePlatform.toUpperCase()} Earnings{" "}
+              {selectedCampaign !== "All" && activePlatform !== "overall"
+                ? ` - ${selectedCampaign}`
+                : ""}
+            </h2>
+
+            <div style={styles.metricsRow}>
+              <div style={styles.metricBox}>
+                <h4>Revenue</h4>
+                <p>${metrics.revenue}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>Impressions</h4>
+                <p>{metrics.impressions.toLocaleString()}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>Clicks</h4>
+                <p>{metrics.clicks.toLocaleString()}</p>
+              </div>
+              <div style={styles.metricBox}>
+                <h4>CTR</h4>
+                <p>{metrics.ctr}%</p>
+              </div>
+            </div>
+
+            {activePlatform !== "overall" && (
+              <div style={styles.card}>
+                <h3>Data Table (CPM Based)</h3>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>Date</th>
+                      <th style={styles.th}>Impressions</th>
+                      <th style={styles.th}>Clicks</th>
+                      <th style={styles.th}>CTR%</th>
+                      <th style={styles.th}>Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableData.map((row, i) => (
+                      <tr key={i}>
+                        <td style={styles.td}>{row.date}</td>
+                        <td style={styles.td}>{row.imps}</td>
+                        <td style={styles.td}>{row.clicks}</td>
+                        <td style={styles.td}>{row.ctr}</td>
+                        <td style={styles.td}>${row.revenue}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div style={styles.chartRow}>
+              <div style={styles.card}>
+                <h3>Revenue Share</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={chartData}
+                      dataKey="revenue"
+                      nameKey="name"
+                      outerRadius={110}
+                      label
+                    >
+                      {chartData.map((_, i) => (
+                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div style={styles.card}>
+                <h3>Revenue Trend</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={chartData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="revenue" fill="#00C49F" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
-};
+}
 
-export default Earnings;
+/* STYLES */
+const styles = {
+  container: { display: "flex", minHeight: "100vh", background: "#f4f6f8" },
+  sidebar: {
+    width: "240px",
+    background: "#002b36",
+    color: "#fff",
+    padding: "20px",
+    height: "100vh",
+    position: "fixed",
+    left: 0,
+    top: 0,
+  },
+  main: {
+    flex: 1,
+    padding: "30px",
+    marginLeft: "240px",
+  },
+  menuTitle: { fontSize: "18px", fontWeight: "bold", marginBottom: "20px" },
+  menuBtn: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "6px",
+    marginBottom: "10px",
+    border: "none",
+    cursor: "pointer",
+    color: "#fff",
+    fontSize: "16px",
+  },
+  select: { width: "100%", padding: "10px", borderRadius: "6px", marginTop: "10px" },
+  title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
+  metricsRow: { display: "flex", gap: "15px", flexWrap: "wrap", marginBottom: "30px" },
+  metricBox: {
+    flex: "1 1 250px",
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "10px",
+    textAlign: "center",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+  },
+  card: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "10px",
+    marginBottom: "20px",
+    flex: 1,
+    minWidth: "380px",
+  },
+  chartRow: { display: "flex", gap: "20px", flexWrap: "wrap" },
+  table: { width: "100%", borderCollapse: "collapse", marginTop: "15px" },
+  th: { border: "1px solid black", padding: "10px", background: "#ddd" },
+  td: { border: "1px solid black", padding: "10px" },
+};

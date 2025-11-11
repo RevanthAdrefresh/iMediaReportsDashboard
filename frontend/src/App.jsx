@@ -1,84 +1,60 @@
-
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-// import Sidebar from "./Sidebar";
 
-// import DailyReport from "./DailyReport";
-// import VideoAdsReport from "./VideoOTT";
-// import WidgetReport from "./ADWidget";
-// import DisplayAndGenealogyReport from "./Display";
-// import MainDashBoard from "./MainDashBoard";
-
-// import DashboardView from "./ExcelDashboard";
-// import UploadSheet from "./Uploadsheet";
 import MainDashboard from "./AdvertiserPanelPagesComponents/RealDashBoard";
 import OTTReport from "./AdvertiserPanelPagesComponents/OttReport";
 import VideoReport from "./AdvertiserPanelPagesComponents/NewVideoReport";
 import AdWidget from "./AdvertiserPanelPagesComponents/Advertise";
 import SummaryReport from "./AdvertiserPanelPagesComponents/Summary";
+
 import Signup from "./LoginAndSignupPages/Signup";
 import Login from "./LoginAndSignupPages/Login";
-import AdminPanel from "./AdminPanelPagesComponents/AdminPanel";
 
-// import PublisherPanel from "../PublisherPanelPagesComponents/PublisherPanel";
+import AdminPanel from "./AdminPanelPagesComponents/AdminPanel";
 import AdvertiserPanel from "./AdvertiserPanelPagesComponents/AdvertiserPanel";
+
+import PublisherPanel from "./PublisherPanelPagesComponents/PublisherPanel";
 import ViewUploads from "./PublisherPanelPagesComponents/ViewUploads";
-import DownloadSheets from "./PublisherPanelPagesComponents/DownloadSheets";import PublisherPanel from "./PublisherPanelPagesComponents/PublisherPanel";
+import DownloadSheets from "./PublisherPanelPagesComponents/DownloadSheets";
 import PublisherEarnings from "./PublisherPanelPagesComponents/PublisherLevelEarnings";
 
-
-// import PublisherEarnings from "../PublisherPanelPagesComponents/PublisherLevelEarnings";
-// AdvertiserPanel
-// import PublisherPanel from "./AdvertiserPanell";
-// import AdvertiserPanel from "./PublisherPanel";
-
-// MainDashBoard
 export default function App() {
   return (
-    <div style={{ display: "flex", background: "#f5f7fa" }}>
-      {/* <Sidebar /> */}
+    <div
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        margin: 0,
+        padding: 0,
+        background: "#f5f7fa",
+        overflowX: "hidden", // ✅ fixes any horizontal scroll
+      }}
+    >
+      <Routes>
+        {/* ✅ Redirect root to login */}
+        <Route path="/" element={<Navigate to="/login" />} />
 
-      <div
-        style={{
-          marginLeft: "240px",
-          padding: "30px",
-          flexGrow: 1,
-          minHeight: "100vh",
-        }}
-      >
-        <Routes>
+        {/* ✅ Auth Routes */}
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
 
-          {/* <Route path="/" element={<Navigate to="/main" />} />
-          <Route path="/main" element={<MainDashBoard />} />
-          // <Route path="/daily" element={<DailyReport />} />
-          <Route path="/video" element={<VideoAdsReport />} />
-          <Route path="/adw" element={<WidgetReport />} />
-          <Route path="/display" element={<DisplayAndGenealogyReport />} />
-          <Route path="/dashboard" element={<DashboardView/>}></Route>
-          <Route path="/upload" element={<UploadSheet/>}></Route> */}
-           <Route path="/signup" element={<Signup/>}></Route>
-                      <Route path="/login" element={<Login/>}></Route>
+        {/* ✅ Advertiser Panel Routes */}
+        <Route path="/advertiserpanel" element={<AdvertiserPanel />} />
+        <Route path="/main" element={<MainDashboard />} />
+        <Route path="/daily" element={<OTTReport />} />
+        <Route path="/video" element={<VideoReport />} />
+        <Route path="/adw" element={<AdWidget />} />
+        <Route path="/overall" element={<SummaryReport />} />
 
-          <Route path="/main" element={<MainDashboard/>}></Route>
-           <Route path="/daily" element={<OTTReport/>}></Route>
-            <Route path="/video" element={<VideoReport/>}></Route>
-             <Route path="/adw" element={<AdWidget/>}></Route>
-              <Route path="/overall" element={<SummaryReport/>}></Route>
-                            <Route path="/adminpanel" element={<AdminPanel/>}></Route>
-                                                        <Route path="/advertiserpanel" element={<AdvertiserPanel/>}></Route>
-                                                                                    <Route path="/publisherpanel" element={<PublisherPanel/>}></Route>
+        {/* ✅ Admin Panel */}
+        <Route path="/adminpanel" element={<AdminPanel />} />
 
-                                                                                    <Route path="/viewuploads" element={<ViewUploads/>}></Route>
-
-                                                    
-
-<Route path="/downloadsheets" element={<DownloadSheets/>}></Route>
-<Route path="/publisherlevelearnings" element={<PublisherEarnings/>}></Route>
-             
-
-        </Routes>
-      </div>
+        {/* ✅ Publisher Panel */}
+        <Route path="/publisherpanel" element={<PublisherPanel />} />
+        <Route path="/viewuploads" element={<ViewUploads />} />
+        <Route path="/downloadsheets" element={<DownloadSheets />} />
+        <Route path="/publisherlevelearnings" element={<PublisherEarnings />} />
+      </Routes>
     </div>
   );
 }
